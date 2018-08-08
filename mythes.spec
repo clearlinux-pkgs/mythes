@@ -4,7 +4,7 @@
 #
 Name     : mythes
 Version  : 2e09086d89ce8e7e73376b92cf67c1798fc47b5f
-Release  : 1
+Release  : 2
 URL      : https://github.com/hunspell/mythes/archive/2e09086d89ce8e7e73376b92cf67c1798fc47b5f.tar.gz
 Source0  : https://github.com/hunspell/mythes/archive/2e09086d89ce8e7e73376b92cf67c1798fc47b5f.tar.gz
 Summary  : MyThes spellchecking library
