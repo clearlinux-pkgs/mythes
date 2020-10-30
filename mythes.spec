@@ -4,15 +4,15 @@
 #
 Name     : mythes
 Version  : 2e09086d89ce8e7e73376b92cf67c1798fc47b5f
-Release  : 3
+Release  : 4
 URL      : https://github.com/hunspell/mythes/archive/2e09086d89ce8e7e73376b92cf67c1798fc47b5f.tar.gz
 Source0  : https://github.com/hunspell/mythes/archive/2e09086d89ce8e7e73376b92cf67c1798fc47b5f.tar.gz
 Summary  : MyThes spellchecking library
 Group    : Development/Tools
 License  : BSD-2-Clause
-Requires: mythes-bin
-Requires: mythes-lib
-Requires: mythes-license
+Requires: mythes-bin = %{version}-%{release}
+Requires: mythes-lib = %{version}-%{release}
+Requires: mythes-license = %{version}-%{release}
 BuildRequires : pkgconfig(hunspell)
 
 %description
@@ -24,7 +24,7 @@ on part of speech, meanings, and synonyms
 %package bin
 Summary: bin components for the mythes package.
 Group: Binaries
-Requires: mythes-license
+Requires: mythes-license = %{version}-%{release}
 
 %description bin
 bin components for the mythes package.
@@ -33,9 +33,10 @@ bin components for the mythes package.
 %package dev
 Summary: dev components for the mythes package.
 Group: Development
-Requires: mythes-lib
-Requires: mythes-bin
-Provides: mythes-devel
+Requires: mythes-lib = %{version}-%{release}
+Requires: mythes-bin = %{version}-%{release}
+Provides: mythes-devel = %{version}-%{release}
+Requires: mythes = %{version}-%{release}
 
 %description dev
 dev components for the mythes package.
@@ -44,7 +45,7 @@ dev components for the mythes package.
 %package lib
 Summary: lib components for the mythes package.
 Group: Libraries
-Requires: mythes-license
+Requires: mythes-license = %{version}-%{release}
 
 %description lib
 lib components for the mythes package.
@@ -60,28 +61,37 @@ license components for the mythes package.
 
 %prep
 %setup -q -n mythes-2e09086d89ce8e7e73376b92cf67c1798fc47b5f
+cd %{_builddir}/mythes-2e09086d89ce8e7e73376b92cf67c1798fc47b5f
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1533756858
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604099781
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %autogen --disable-static --disable-werror
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1533756858
+export SOURCE_DATE_EPOCH=1604099781
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/mythes
-cp COPYING %{buildroot}/usr/share/doc/mythes/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/mythes
+cp %{_builddir}/mythes-2e09086d89ce8e7e73376b92cf67c1798fc47b5f/COPYING %{buildroot}/usr/share/package-licenses/mythes/cd4d2be2fb45653d8f8923933046f5a4cb4ff882
 %make_install
 
 %files
@@ -93,7 +103,7 @@ cp COPYING %{buildroot}/usr/share/doc/mythes/COPYING
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.hxx
+/usr/include/mythes.hxx
 /usr/lib64/libmythes-1.2.so
 /usr/lib64/pkgconfig/mythes.pc
 
@@ -103,5 +113,5 @@ cp COPYING %{buildroot}/usr/share/doc/mythes/COPYING
 /usr/lib64/libmythes-1.2.so.0.0.0
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/mythes/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/mythes/cd4d2be2fb45653d8f8923933046f5a4cb4ff882
